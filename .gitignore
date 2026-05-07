@@ -141,3 +141,20 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+# ======================
+# SPRING BOOT / JAVA
+# ======================
+
+target/
+*.class
+*.jar
+*.war
+
+.idea/
+.project
+.classpath
+.settings/
+
+.vscode/
+
+.mvn/wrapper/maven-wrapper.jar
