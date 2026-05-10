@@ -1,171 +1,66 @@
 import { useEffect, useState } from "react";
-
-import API from "../api/axios";
-
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import API from "../services/api";
 
 function Students() {
 
   const [students, setStudents] = useState([]);
 
-  const [name, setName] = useState("");
-
-  const [email, setEmail] = useState("");
-
-  const [editingId, setEditingId] = useState(null);
-
   useEffect(() => {
 
-    fetchStudents();
+    API.get("/students")
+      .then((res) => setStudents(res.data))
+      .catch((err) => console.log(err));
 
   }, []);
 
-  const fetchStudents = async () => {
-
-    const res = await API.get("/students");
-
-    setStudents(res.data);
-  };
-
-  const addStudent = async (e) => {
-
-    e.preventDefault();
-
-    try {
-
-      if (editingId) {
-
-        await API.put(`/students/${editingId}`, {
-          name,
-          email,
-        });
-
-      } else {
-
-        await API.post("/students", {
-          name,
-          email,
-        });
-      }
-
-      setName("");
-      setEmail("");
-      setEditingId(null);
-
-      fetchStudents();
-
-    } catch (err) {
-
-      alert("Error");
-    }
-  };
-
-  const deleteStudent = async (id) => {
-
-    await API.delete(`/students/${id}`);
-
-    fetchStudents();
-  };
-
-  const editStudent = (student) => {
-
-    setEditingId(student.id);
-
-    setName(student.name);
-
-    setEmail(student.email);
-  };
-
   return (
 
-    <div className="layout">
+    <div className="page-container">
 
-      <Sidebar />
+      <div className="page-content">
 
-      <div className="content">
+        <h1>Students</h1>
 
-        <Navbar />
+        <div className="glass-table">
 
-        <h2>Students</h2>
+          <table>
 
-        <form className="form" onSubmit={addStudent}>
+            <thead>
 
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <button type="submit">
-
-            {editingId ? "Update" : "Add"}
-
-          </button>
-
-        </form>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Actions</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {students.map((s) => (
-
-              <tr key={s.id}>
-
-                <td>{s.id}</td>
-
-                <td>{s.name}</td>
-
-                <td>{s.email}</td>
-
-                <td>
-
-                  <button onClick={() => editStudent(s)}>
-                    Edit
-                  </button>
-
-                  <button onClick={() => deleteStudent(s.id)}>
-                    Delete
-                  </button>
-
-                </td>
-
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
               </tr>
 
-            ))}
+            </thead>
 
-          </tbody>
+            <tbody>
 
-        </table>
+              {students.map((student) => (
+
+                <tr key={student.id}>
+
+                  <td>{student.id}</td>
+                  <td>{student.name}</td>
+                  <td>{student.email}</td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </div>
 
     </div>
+
   );
+
 }
 
 export default Students;

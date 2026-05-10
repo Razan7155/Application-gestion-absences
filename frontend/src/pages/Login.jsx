@@ -1,59 +1,36 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../api/axios";
+import API from "../services/api";
 
 function Login() {
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const navigate = useNavigate();
-
-  const login = async (e) => {
-
-    e.preventDefault();
-
-    try {
-
-      const res = await API.post("/auth/login", {
-        username,
-        password,
-      });
-
-      localStorage.setItem("token", res.data.token);
-
-      navigate("/dashboard");
-
-    } catch (err) {
-
-      alert("Login failed");
-
-    }
-  };
-
   return (
+    <div className="login-page">
 
-    <div className="login-container">
+      <div className="login-card">
 
-      <form className="login-form" onSubmit={login}>
+        <h1>
+          Welcome <span>Back</span>
+        </h1>
 
-        <h2>Login</h2>
+        <p>Access your administrator dashboard</p>
 
-        <input
-          type="text"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <form>
 
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Username"
+          />
 
-        <button type="submit">Login</button>
+          <input
+            type="password"
+            placeholder="Password"
+          />
 
-      </form>
+          <button>
+            Sign In
+          </button>
+
+        </form>
+
+      </div>
 
     </div>
   );

@@ -1,33 +1,101 @@
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
 
+  const navigate = useNavigate();
+
   return (
 
-    <div className="layout">
+    <div>
 
-      <Sidebar />
+      {/* HERO */}
 
-      <div className="content">
+      <section className="hero-section">
 
-        <Navbar />
+        <div className="hero-content">
 
-        <div className="cards">
+          <h1>
+            Smart <span>Absence</span><br />
+            Platform
+          </h1>
 
-          <div className="card">
+          <p>
+            Modern and professional absence management dashboard
+            built with Spring Boot and React.
+          </p>
+
+          <button
+            className="hero-btn"
+            onClick={() => navigate("/students")}
+          >
+            Explore Dashboard
+          </button>
+
+        </div>
+
+      </section>
+
+      {/* SERVICES */}
+
+      <section className="services-section">
+
+        <div className="cards-container">
+
+          <div className="service-card">
+
             <h2>Students</h2>
+
+            <p>
+              Manage all academic profiles
+              with a modern interface.
+            </p>
+
+            <button
+              onClick={() => navigate("/students")}
+            >
+              Open Service
+            </button>
+
           </div>
 
-          <div className="card">
+          <div className="service-card">
+
             <h2>Absences</h2>
+
+            <p>
+              Track and monitor attendance
+              efficiently and professionally.
+            </p>
+
+            <button
+              onClick={() => navigate("/absences")}
+            >
+              Open Service
+            </button>
+
+          </div>
+
+          <div className="service-card">
+
+            <h2>Analytics</h2>
+
+            <p>
+              Visualize reports and statistics
+              with advanced dashboards.
+            </p>
+
+            <button>
+              Open Service
+            </button>
+
           </div>
 
         </div>
 
-      </div>
+      </section>
 
     </div>
+
   );
 }
 

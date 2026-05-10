@@ -1,170 +1,68 @@
 import { useEffect, useState } from "react";
-
-import API from "../api/axios";
-
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import API from "../services/api";
 
 function Absences() {
 
   const [absences, setAbsences] = useState([]);
 
-  const [reason, setReason] = useState("");
-
-  const [date, setDate] = useState("");
-
-  const [editingId, setEditingId] = useState(null);
-
   useEffect(() => {
 
-    fetchAbsences();
+    API.get("/absences")
+      .then((res) => setAbsences(res.data))
+      .catch((err) => console.log(err));
 
   }, []);
 
-  const fetchAbsences = async () => {
-
-    const res = await API.get("/absences");
-
-    setAbsences(res.data);
-  };
-
-  const addAbsence = async (e) => {
-
-    e.preventDefault();
-
-    try {
-
-      if (editingId) {
-
-        await API.put(`/absences/${editingId}`, {
-          reason,
-          date,
-        });
-
-      } else {
-
-        await API.post("/absences", {
-          reason,
-          date,
-        });
-      }
-
-      setReason("");
-      setDate("");
-      setEditingId(null);
-
-      fetchAbsences();
-
-    } catch (err) {
-
-      alert("Error");
-    }
-  };
-
-  const deleteAbsence = async (id) => {
-
-    await API.delete(`/absences/${id}`);
-
-    fetchAbsences();
-  };
-
-  const editAbsence = (absence) => {
-
-    setEditingId(absence.id);
-
-    setReason(absence.reason);
-
-    setDate(absence.date);
-  };
-
   return (
 
-    <div className="layout">
+    <div className="page-container">
 
-      <Sidebar />
+      <div className="page-content">
 
-      <div className="content">
+        <h1>Absences</h1>
 
-        <Navbar />
+        <div className="glass-table">
 
-        <h2>Absences</h2>
+          <table>
 
-        <form className="form" onSubmit={addAbsence}>
+            <thead>
 
-          <input
-            type="text"
-            placeholder="Reason"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            required
-          />
-
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-
-          <button type="submit">
-
-            {editingId ? "Update" : "Add"}
-
-          </button>
-
-        </form>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>ID</th>
-              <th>Date</th>
-              <th>Reason</th>
-              <th>Actions</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {absences.map((a) => (
-
-              <tr key={a.id}>
-
-                <td>{a.id}</td>
-
-                <td>{a.date}</td>
-
-                <td>{a.reason}</td>
-
-                <td>
-
-                  <button onClick={() => editAbsence(a)}>
-                    Edit
-                  </button>
-
-                  <button onClick={() => deleteAbsence(a.id)}>
-                    Delete
-                  </button>
-
-                </td>
-
+              <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Date</th>
+                <th>Status</th>
               </tr>
 
-            ))}
+            </thead>
 
-          </tbody>
+            <tbody>
 
-        </table>
+              {absences.map((absence) => (
+
+                <tr key={absence.id}>
+
+                  <td>{absence.id}</td>
+                  <td>{absence.studentName}</td>
+                  <td>{absence.date}</td>
+                  <td>{absence.status}</td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </div>
 
     </div>
+
   );
+
 }
 
 export default Absences;

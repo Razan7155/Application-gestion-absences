@@ -1,27 +1,21 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Navbar() {
-
-  const navigate = useNavigate();
-
-  const logout = () => {
-
-    localStorage.removeItem("token");
-
-    navigate("/");
-  };
-
   return (
+    <nav className="navbar">
 
-    <div className="navbar">
+      <div className="logo">
+        Absence<span>Pro</span>
+      </div>
 
-      <h3>Gestion des Absences</h3>
+      <div className="nav-links">
+        <Link to="/">Dashboard</Link>
+        <Link to="/students">Students</Link>
+        <Link to="/absences">Absences</Link>
+        <Link to="/login" className="nav-login">Login</Link>
+      </div>
 
-      <button onClick={logout}>
-        Logout
-      </button>
-
-    </div>
+    </nav>
   );
 }
 

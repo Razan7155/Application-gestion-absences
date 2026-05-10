@@ -1,11 +1,18 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
 
-import Login from "./pages/Login";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import "./styles/app.css";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import Students from "./pages/Students";
 import Absences from "./pages/Absences";
 
-import ProtectedRoute from "./components/ProtectedRoute";
+//import "./App.css";
 
 function App() {
 
@@ -13,41 +20,46 @@ function App() {
 
     <BrowserRouter>
 
-      <Routes>
+      <div className="app-container">
 
-        <Route path="/" element={<Login />} />
+        <Navbar />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <main className="main-content">
 
-        <Route
-          path="/students"
-          element={
-            <ProtectedRoute>
-              <Students />
-            </ProtectedRoute>
-          }
-        />
+          <Routes>
 
-        <Route
-          path="/absences"
-          element={
-            <ProtectedRoute>
-              <Absences />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/"
+              element={<Dashboard />}
+            />
 
-      </Routes>
+            <Route
+              path="/login"
+              element={<Login />}
+            />
+
+            <Route
+              path="/students"
+              element={<Students />}
+            />
+
+            <Route
+              path="/absences"
+              element={<Absences />}
+            />
+
+          </Routes>
+
+        </main>
+
+        <Footer />
+
+      </div>
 
     </BrowserRouter>
+
   );
+
 }
 
 export default App;
