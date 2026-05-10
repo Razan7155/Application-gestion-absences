@@ -1,68 +1,143 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
 
 function Absences() {
-
   const [absences, setAbsences] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [form, setForm] = useState({
+    date: "",
+    matiere: "",
+    justification: "",
+    studentId: ""
+  });
+
+  const token = localStorage.getItem("token");
+
+  const fetchAbsences = async () => {
+    const res = await fetch("http://localhost:9094/absences", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    setAbsences(await res.json());
+  };
+
+  const fetchStudents = async () => {
+    const res = await fetch("http://localhost:9094/students", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    setStudents(await res.json());
+  };
 
   useEffect(() => {
-
-    API.get("/absences")
-      .then((res) => setAbsences(res.data))
-      .catch((err) => console.log(err));
-
+    fetchAbsences();
+    fetchStudents();
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await fetch("http://localhost:9094/absences", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(form)
+    });
+
+    fetchAbsences();
+  };
+
   return (
+    <div className="dashboard-page">
 
-    <div className="page-container">
+      <h1 className="page-title">Absences Management</h1>
 
-      <div className="page-content">
+      <div className="glass-card form-card">
 
-        <h1>Absences</h1>
+        <form onSubmit={handleSubmit} className="modern-form">
 
-        <div className="glass-table">
+          <input
+            type="date"
+            onChange={(e) =>
+              setForm({ ...form, date: e.target.value })
+            }
+          />
 
-          <table>
+          <input
+            type="text"
+            placeholder="Matiere"
+            onChange={(e) =>
+              setForm({ ...form, matiere: e.target.value })
+            }
+          />
 
-            <thead>
+          <input
+            type="text"
+            placeholder="Justification"
+            onChange={(e) =>
+              setForm({
+                ...form,
+                justification: e.target.value
+              })
+            }
+          />
 
-              <tr>
-                <th>ID</th>
-                <th>Student</th>
-                <th>Date</th>
-                <th>Status</th>
+          <select
+            onChange={(e) =>
+              setForm({
+                ...form,
+                studentId: e.target.value
+              })
+            }
+          >
+            <option>Select Student</option>
+
+            {students.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+
+          <button type="submit">Add Absence</button>
+
+        </form>
+
+      </div>
+
+      <div className="glass-card">
+
+        <table className="modern-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Matiere</th>
+              <th>Justification</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {absences.map((a) => (
+              <tr key={a.id}>
+                <td>{a.id}</td>
+                <td>{a.date}</td>
+                <td>{a.matiere}</td>
+                <td>{a.justification}</td>
               </tr>
-
-            </thead>
-
-            <tbody>
-
-              {absences.map((absence) => (
-
-                <tr key={absence.id}>
-
-                  <td>{absence.id}</td>
-                  <td>{absence.studentName}</td>
-                  <td>{absence.date}</td>
-                  <td>{absence.status}</td>
-
-                </tr>
-
-              ))}
-
-            </tbody>
-
-          </table>
-
-        </div>
+            ))}
+          </tbody>
+        </table>
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default Absences;

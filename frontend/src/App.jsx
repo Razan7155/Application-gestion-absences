@@ -4,15 +4,18 @@ import {
   Route
 } from "react-router-dom";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
 import "./styles/app.css";
+
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Students from "./pages/Students";
 import Absences from "./pages/Absences";
-
-//import "./App.css";
+import Analytics from "./pages/Analytics";
 
 function App() {
 
@@ -40,12 +43,29 @@ function App() {
 
             <Route
               path="/students"
-              element={<Students />}
+              element={
+                <ProtectedRoute>
+                  <Students />
+                </ProtectedRoute>
+              }
             />
 
             <Route
               path="/absences"
-              element={<Absences />}
+              element={
+                <ProtectedRoute>
+                  <Absences />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              }
             />
 
           </Routes>
