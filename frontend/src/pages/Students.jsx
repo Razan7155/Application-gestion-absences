@@ -56,7 +56,7 @@ function Students() {
         <h1>Students Management</h1>
 
         <form
-          className="student-form"
+           className="modern-form"
           onSubmit={addStudent}
         >
 
@@ -96,7 +96,7 @@ function Students() {
             }
           />
 
-          <button type="submit">
+          <button className="modern-btn">
             Add Student
           </button>
 

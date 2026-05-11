@@ -64,7 +64,7 @@ function Absences() {
         <h1>Absences Management</h1>
 
         <form
-          className="student-form"
+          className="modern-form"
           onSubmit={addAbsence}
         >
 
