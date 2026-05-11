@@ -1,54 +1,62 @@
 import { useEffect, useState } from "react";
+import axios from "../services/axios";
 
 function Analytics() {
-  const [students, setStudents] = useState(0);
-  const [absences, setAbsences] = useState(0);
 
-  const token = localStorage.getItem("token");
+  const [studentsCount, setStudentsCount] = useState(0);
+
+  const [absencesCount, setAbsencesCount] = useState(0);
 
   useEffect(() => {
-    const loadStats = async () => {
-
-      const s = await fetch(
-        "http://localhost:9094/students",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      const a = await fetch(
-        "http://localhost:9094/absences",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      setStudents((await s.json()).length);
-      setAbsences((await a.json()).length);
-    };
 
     loadStats();
+
   }, []);
 
+  const loadStats = async () => {
+
+    try {
+
+      const studentsRes = await axios.get("/students");
+
+      const absencesRes = await axios.get("/absences");
+
+      setStudentsCount(studentsRes.data.length);
+
+      setAbsencesCount(absencesRes.data.length);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="dashboard-page">
 
-      <h1 className="page-title">Analytics</h1>
+    <div className="page-container">
 
-      <div className="stats-grid">
+      <div className="page-content">
 
-        <div className="glass-card stat-card">
-          <h2>{students}</h2>
-          <p>Total Students</p>
-        </div>
+        <h1>Analytics Dashboard</h1>
 
-        <div className="glass-card stat-card">
-          <h2>{absences}</h2>
-          <p>Total Absences</p>
+        <div className="stats-grid">
+
+          <div className="glass-card stat-card">
+
+            <h2>{studentsCount}</h2>
+
+            <p>Total Students</p>
+
+          </div>
+
+          <div className="glass-card stat-card">
+
+            <h2>{absencesCount}</h2>
+
+            <p>Total Absences</p>
+
+          </div>
+
         </div>
 
       </div>

@@ -1,26 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../services/axios";
 
 function Login() {
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const [form, setForm] = useState({
+    username: "",
+    password: ""
+  });
 
-    e.preventDefault();
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
 
     try {
 
       const response = await axios.post(
-        "http://localhost:9094/auth/login",
-        {
-          username,
-          password
-        }
+        "/auth/login",
+        form
       );
 
       localStorage.setItem(
@@ -28,51 +27,70 @@ function Login() {
         response.data.token
       );
 
-      navigate("/students");
+      localStorage.setItem(
+        "role",
+        response.data.role
+      );
 
-    } catch (error) {
+      localStorage.setItem(
+        "username",
+        response.data.username
+      );
 
-      alert("Invalid credentials");
+      if (response.data.role === "STUDENT") {
+
+        navigate("/my-absences");
+
+      } else {
+
+        navigate("/");
+      }
+
+    } catch (err) {
+
+      setError("Invalid credentials");
     }
   };
 
   return (
 
-    <div className="login-page">
+    <div className="login-container">
 
       <div className="login-card">
 
-        <h1>Welcome Back</h1>
+        <h1>AbsencePro</h1>
 
-        <p>
-          Access your professional dashboard
-        </p>
+        <input
+          type="text"
+          placeholder="Username"
+          onChange={(e)=>
+            setForm({
+              ...form,
+              username:e.target.value
+            })
+          }
+        />
 
-        <form onSubmit={handleLogin}>
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e)=>
+            setForm({
+              ...form,
+              password:e.target.value
+            })
+          }
+        />
 
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) =>
-              setUsername(e.target.value)
-            }
-          />
+        <button onClick={handleLogin}>
+          Login
+        </button>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-          />
-
-          <button type="submit">
-            Login
-          </button>
-
-        </form>
+        {error && (
+          <p style={{color:"red"}}>
+            {error}
+          </p>
+        )}
 
       </div>
 

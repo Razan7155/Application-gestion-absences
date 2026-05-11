@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import axios from "../services/axios";
 
 function Absences() {
+
   const [absences, setAbsences] = useState([]);
+
   const [students, setStudents] = useState([]);
+
   const [form, setForm] = useState({
     date: "",
     matiere: "",
@@ -10,75 +14,114 @@ function Absences() {
     studentId: ""
   });
 
-  const token = localStorage.getItem("token");
-
-  const fetchAbsences = async () => {
-    const res = await fetch("http://localhost:9094/absences", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    setAbsences(await res.json());
-  };
-
-  const fetchStudents = async () => {
-    const res = await fetch("http://localhost:9094/students", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    setStudents(await res.json());
-  };
-
   useEffect(() => {
-    fetchAbsences();
-    fetchStudents();
+
+    loadAbsences();
+
+    axios.get("/students")
+      .then(res => setStudents(res.data));
+
   }, []);
 
-  const handleSubmit = async (e) => {
+  const loadAbsences = () => {
+
+    axios.get("/absences")
+      .then(res => setAbsences(res.data));
+  };
+
+  const addAbsence = async (e) => {
+
     e.preventDefault();
 
-    await fetch("http://localhost:9094/absences", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(form)
-    });
+    await axios.post("/absences", form);
 
-    fetchAbsences();
+    loadAbsences();
+
+    setForm({
+      date: "",
+      matiere: "",
+      justification: "",
+      studentId: ""
+    });
+  };
+
+  const deleteAbsence = async (id) => {
+
+    if (window.confirm("Delete absence ?")) {
+
+      await axios.delete(`/absences/${id}`);
+
+      loadAbsences();
+    }
   };
 
   return (
-    <div className="dashboard-page">
 
-      <h1 className="page-title">Absences Management</h1>
+    <div className="page-container">
 
-      <div className="glass-card form-card">
+      <div className="page-content">
 
-        <form onSubmit={handleSubmit} className="modern-form">
+        <h1>Absences Management</h1>
+
+        <form
+          className="student-form"
+          onSubmit={addAbsence}
+        >
+
+          <select
+            value={form.studentId}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                studentId: e.target.value
+              })
+            }
+          >
+
+            <option value="">
+              Select Student
+            </option>
+
+            {students.map(student => (
+
+              <option
+                key={student.id}
+                value={student.id}
+              >
+                {student.name}
+              </option>
+
+            ))}
+
+          </select>
 
           <input
             type="date"
+            value={form.date}
             onChange={(e) =>
-              setForm({ ...form, date: e.target.value })
+              setForm({
+                ...form,
+                date: e.target.value
+              })
             }
           />
 
           <input
             type="text"
-            placeholder="Matiere"
+            placeholder="Subject"
+            value={form.matiere}
             onChange={(e) =>
-              setForm({ ...form, matiere: e.target.value })
+              setForm({
+                ...form,
+                matiere: e.target.value
+              })
             }
           />
 
           <input
             type="text"
             placeholder="Justification"
+            value={form.justification}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -87,52 +130,64 @@ function Absences() {
             }
           />
 
-          <select
-            onChange={(e) =>
-              setForm({
-                ...form,
-                studentId: e.target.value
-              })
-            }
-          >
-            <option>Select Student</option>
-
-            {students.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit">Add Absence</button>
+          <button type="submit">
+            Add Absence
+          </button>
 
         </form>
 
-      </div>
+        <div className="glass-table">
 
-      <div className="glass-card">
+          <table>
 
-        <table className="modern-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Matiere</th>
-              <th>Justification</th>
-            </tr>
-          </thead>
+            <thead>
 
-          <tbody>
-            {absences.map((a) => (
-              <tr key={a.id}>
-                <td>{a.id}</td>
-                <td>{a.date}</td>
-                <td>{a.matiere}</td>
-                <td>{a.justification}</td>
+              <tr>
+                <th>Student</th>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Justification</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+
+            </thead>
+
+            <tbody>
+
+              {absences.map(abs => (
+
+                <tr key={abs.id}>
+
+                  <td>{abs.student?.name}</td>
+
+                  <td>{abs.date}</td>
+
+                  <td>{abs.matiere}</td>
+
+                  <td>{abs.justification}</td>
+
+                  <td>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() =>
+                        deleteAbsence(abs.id)
+                      }
+                    >
+                      Delete
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </div>
 

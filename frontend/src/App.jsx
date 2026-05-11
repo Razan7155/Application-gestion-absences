@@ -3,19 +3,19 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-
-import ProtectedRoute from "./components/ProtectedRoute";
-
+//import App from "./App";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
-import "./styles/app.css";
-
-import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import Absences from "./pages/Absences";
 import Analytics from "./pages/Analytics";
+import Users from "./pages/Users";
+import MyAbsences from "./pages/MyAbsences";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
 
@@ -23,63 +23,87 @@ function App() {
 
     <BrowserRouter>
 
-      <div className="app-container">
+      <Navbar />
 
-        <Navbar />
+      <Routes>
 
-        <main className="main-content">
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-          <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute
+              roles={["ADMIN","ENSEIGNANT"]}
+            >
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-            <Route
-              path="/"
-              element={<Dashboard />}
-            />
+        <Route
+          path="/students"
+          element={
+            <ProtectedRoute
+              roles={["ADMIN","ENSEIGNANT"]}
+            >
+              <Students />
+            </ProtectedRoute>
+          }
+        />
 
-            <Route
-              path="/login"
-              element={<Login />}
-            />
+        <Route
+          path="/absences"
+          element={
+            <ProtectedRoute
+              roles={["ADMIN","ENSEIGNANT"]}
+            >
+              <Absences />
+            </ProtectedRoute>
+          }
+        />
 
-            <Route
-              path="/students"
-              element={
-                <ProtectedRoute>
-                  <Students />
-                </ProtectedRoute>
-              }
-            />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute
+              roles={["ADMIN","ENSEIGNANT"]}
+            >
+              <Analytics />
+            </ProtectedRoute>
+          }
+        />
 
-            <Route
-              path="/absences"
-              element={
-                <ProtectedRoute>
-                  <Absences />
-                </ProtectedRoute>
-              }
-            />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute
+              roles={["ADMIN"]}
+            >
+              <Users />
+            </ProtectedRoute>
+          }
+        />
 
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute>
-                  <Analytics />
-                </ProtectedRoute>
-              }
-            />
+        <Route
+          path="/my-absences"
+          element={
+            <ProtectedRoute
+              roles={["STUDENT"]}
+            >
+              <MyAbsences />
+            </ProtectedRoute>
+          }
+        />
 
-          </Routes>
+      </Routes>
 
-        </main>
-
-        <Footer />
-
-      </div>
+      <Footer />
 
     </BrowserRouter>
-
   );
-
 }
 
 export default App;

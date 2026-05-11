@@ -6,12 +6,15 @@ function Navbar() {
 
   const token = localStorage.getItem("token");
 
+  const role = localStorage.getItem("role");
+
+  const username = localStorage.getItem("username");
+
   const logout = () => {
 
-    localStorage.removeItem("token");
+    localStorage.clear();
 
-    navigate("/");
-
+    navigate("/login");
   };
 
   return (
@@ -24,17 +27,43 @@ function Navbar() {
 
       <div className="nav-links">
 
-        <Link to="/">Dashboard</Link>
+        {token && role !== "STUDENT" && (
+          <>
+            <Link to="/">
+              Dashboard
+            </Link>
+
+            <Link to="/students">
+              Students
+            </Link>
+
+            <Link to="/absences">
+              Absences
+            </Link>
+
+            <Link to="/analytics">
+              Analytics
+            </Link>
+          </>
+        )}
+
+        {role === "ADMIN" && (
+          <Link to="/users">
+            Users
+          </Link>
+        )}
+
+        {role === "STUDENT" && (
+          <Link to="/my-absences">
+            My Absences
+          </Link>
+        )}
 
         {
           token && (
-            <>
-              <Link to="/students">Students</Link>
-
-              <Link to="/absences">Absences</Link>
-
-              <Link to="/analytics">Analytics</Link>
-            </>
+            <div className="user-info">
+              {username} ({role})
+            </div>
           )
         }
 
@@ -56,7 +85,6 @@ function Navbar() {
       </div>
 
     </nav>
-
   );
 }
 

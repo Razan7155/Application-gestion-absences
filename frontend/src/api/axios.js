@@ -1,19 +1,85 @@
-import axios from "axios";
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
 
-const API = axios.create({
-  baseURL: "http://localhost:9094",
-});
+import ProtectedRoute from "./components/ProtectedRoute";
 
-API.interceptors.request.use((config) => {
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-  const token = localStorage.getItem("token");
+import "./styles/app.css";
 
-  if (token) {
-    config.headers.Authorization =
-      `Bearer ${token}`;
-  }
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import Students from "./pages/Students";
+import Absences from "./pages/Absences";
+import Analytics from "./pages/Analytics";
 
-  return config;
-});
+function App() {
 
-export default API;
+  return (
+
+    <BrowserRouter>
+
+      <div className="app-container">
+
+        <Navbar />
+
+        <main className="main-content">
+
+          <Routes>
+
+            <Route
+              path="/"
+              element={<Dashboard />}
+            />
+
+            <Route
+              path="/login"
+              element={<Login />}
+            />
+
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute>
+                  <Students />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/absences"
+              element={
+                <ProtectedRoute>
+                  <Absences />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              }
+            />
+
+          </Routes>
+
+        </main>
+
+        <Footer />
+
+      </div>
+
+    </BrowserRouter>
+
+  );
+
+}
+
+export default App;
