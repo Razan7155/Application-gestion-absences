@@ -3,33 +3,36 @@ package com.example.absence.config;
 import com.example.absence.entity.Role;
 import com.example.absence.entity.User;
 import com.example.absence.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 @RequiredArgsConstructor
-public class DataInitializer {
+public class DataInitializer implements CommandLineRunner {
 
-    private final PasswordEncoder encoder;
+    private final UserRepository userRepository;
 
-    @Bean
-    CommandLineRunner init(UserRepository repo) {
+    private final PasswordEncoder passwordEncoder;
 
-        return args -> {
+    @Override
+    public void run(String... args) {
 
-            if (repo.findByUsername("admin").isEmpty()) {
+        if (userRepository.findByUsername("admin").isEmpty()) {
 
-                repo.save(
-                        User.builder()
-                                .username("admin")
-                                .password(encoder.encode("admin"))
-                                .role(Role.ADMIN)
-                                .build()
-                );
-            }
-        };
+            User admin = User.builder()
+                    .username("admin")
+                    .email("admin@gmail.com")
+                    .password(passwordEncoder.encode("admin123"))
+                    .role(Role.ADMIN)
+                    .build();
+
+            userRepository.save(admin);
+
+            System.out.println("ADMIN CREATED");
+        }
     }
 }

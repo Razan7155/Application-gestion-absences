@@ -2,10 +2,11 @@ package com.example.absence.service.impl;
 
 import com.example.absence.dto.StudentDTO;
 import com.example.absence.entity.Student;
-import com.example.absence.mapper.StudentMapper;
 import com.example.absence.repository.StudentRepository;
 import com.example.absence.service.StudentService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,29 +15,65 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final StudentRepository repo;
-    private final StudentMapper mapper;
+    private final StudentRepository repository;
 
+    @Override
     public Student create(StudentDTO dto) {
-        return repo.save(mapper.toEntity(dto));
+
+        Student student = Student.builder()
+
+                .name(dto.getName())
+
+                .email(dto.getEmail())
+
+                .filiere(dto.getFiliere())
+
+                .build();
+
+        return repository.save(student);
     }
 
+    @Override
     public List<Student> getAll() {
-        return repo.findAll();
+
+        return repository.findAll();
     }
 
+    @Override
     public Student update(Long id, StudentDTO dto) {
-        Student s = repo.findById(id)
+
+        Student student = repository.findById(id)
+
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        s.setName(dto.getName());
-        s.setEmail(dto.getEmail());
-        s.setFiliere(dto.getFiliere());
+        student.setName(dto.getName());
 
-        return repo.save(s);
+        student.setEmail(dto.getEmail());
+
+        student.setFiliere(dto.getFiliere());
+
+        return repository.save(student);
     }
 
+    @Override
     public void delete(Long id) {
-        repo.deleteById(id);
+
+        repository.deleteById(id);
+    }
+
+    @Override
+    public List<Student> search(String name, String filiere) {
+
+        if (name != null && !name.isEmpty()) {
+
+            return repository.findByNameContaining(name);
+        }
+
+        if (filiere != null && !filiere.isEmpty()) {
+
+            return repository.findByFiliereContaining(filiere);
+        }
+
+        return repository.findAll();
     }
 }
