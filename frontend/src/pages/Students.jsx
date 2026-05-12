@@ -11,16 +11,18 @@ function Students() {
     filiere: ""
   });
 
+  useEffect(() => {
+
+    loadStudents();
+
+  }, []);
+
   const loadStudents = async () => {
 
     const res = await axios.get("/students");
 
     setStudents(res.data);
   };
-
-  useEffect(() => {
-    loadStudents();
-  }, []);
 
   const addStudent = async (e) => {
 
@@ -53,10 +55,12 @@ function Students() {
 
       <div className="page-content">
 
-        <h1>Students Management</h1>
+        <h1 className="page-title">
+          Students Management
+        </h1>
 
         <form
-           className="modern-form"
+          className="modern-form"
           onSubmit={addStudent}
         >
 
@@ -64,10 +68,10 @@ function Students() {
             type="text"
             placeholder="Student Name"
             value={form.name}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                name: e.target.value
+                name:e.target.value
               })
             }
           />
@@ -76,10 +80,10 @@ function Students() {
             type="email"
             placeholder="Email"
             value={form.email}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                email: e.target.value
+                email:e.target.value
               })
             }
           />
@@ -88,15 +92,18 @@ function Students() {
             type="text"
             placeholder="Filiere"
             value={form.filiere}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                filiere: e.target.value
+                filiere:e.target.value
               })
             }
           />
 
-          <button className="modern-btn">
+          <button
+            className="modern-btn"
+            type="submit"
+          >
             Add Student
           </button>
 
@@ -104,7 +111,7 @@ function Students() {
 
         <div className="glass-table">
 
-          <table>
+          <table className="modern-table">
 
             <thead>
 
@@ -120,7 +127,7 @@ function Students() {
 
             <tbody>
 
-              {students.map((student) => (
+              {students.map(student => (
 
                 <tr key={student.id}>
 
@@ -146,7 +153,6 @@ function Students() {
                   </td>
 
                 </tr>
-
               ))}
 
             </tbody>

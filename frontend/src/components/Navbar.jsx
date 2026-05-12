@@ -21,7 +21,11 @@ function Navbar() {
 
     <nav className="navbar">
 
-      <div className="logo">
+      <div
+        className="logo"
+        onClick={() => navigate("/")}
+        style={{ cursor:"pointer" }}
+      >
         Absence<span>Pro</span>
       </div>
 
@@ -29,9 +33,7 @@ function Navbar() {
 
         {token && role !== "STUDENT" && (
           <>
-            <Link to="/">
-              Dashboard
-            </Link>
+            <Link to="/">Dashboard</Link>
 
             <Link to="/students">
               Students
@@ -54,33 +56,41 @@ function Navbar() {
         )}
 
         {role === "STUDENT" && (
-          <Link to="/my-absences">
-            My Absences
-          </Link>
+          <>
+            <Link to="/my-absences">
+              My Absences
+            </Link>
+
+            <Link to="/profile">
+              Profile
+            </Link>
+          </>
         )}
 
-        {
-          token && (
-            <div className="user-info">
-              {username} ({role})
-            </div>
-          )
-        }
+        {token && (
+          <div className="user-info">
+            {username} ({role})
+          </div>
+        )}
 
-        {
-          !token ? (
-            <Link to="/login">
-              Login
-            </Link>
-          ) : (
-            <button
-              className="logout-btn"
-              onClick={logout}
-            >
-              Logout
-            </button>
-          )
-        }
+        {!token ? (
+
+          <Link
+            className="login-link"
+            to="/login"
+          >
+            Login
+          </Link>
+
+        ) : (
+
+          <button
+            className="logout-btn"
+            onClick={logout}
+          >
+            Logout
+          </button>
+        )}
 
       </div>
 

@@ -8,46 +8,53 @@ function Absences() {
   const [students, setStudents] = useState([]);
 
   const [form, setForm] = useState({
-    date: "",
-    matiere: "",
-    justification: "",
-    studentId: ""
+    date:"",
+    matiere:"",
+    justification:"",
+    studentId:""
   });
 
-  useEffect(() => {
+  useEffect(()=>{
 
     loadAbsences();
 
-    axios.get("/students")
-      .then(res => setStudents(res.data));
+    loadStudents();
 
-  }, []);
+  },[]);
 
-  const loadAbsences = () => {
+  const loadAbsences = async()=>{
 
-    axios.get("/absences")
-      .then(res => setAbsences(res.data));
+    const res = await axios.get("/absences");
+
+    setAbsences(res.data);
   };
 
-  const addAbsence = async (e) => {
+  const loadStudents = async()=>{
+
+    const res = await axios.get("/students");
+
+    setStudents(res.data);
+  };
+
+  const addAbsence = async(e)=>{
 
     e.preventDefault();
 
-    await axios.post("/absences", form);
-
-    loadAbsences();
+    await axios.post("/absences",form);
 
     setForm({
-      date: "",
-      matiere: "",
-      justification: "",
-      studentId: ""
+      date:"",
+      matiere:"",
+      justification:"",
+      studentId:""
     });
+
+    loadAbsences();
   };
 
-  const deleteAbsence = async (id) => {
+  const deleteAbsence = async(id)=>{
 
-    if (window.confirm("Delete absence ?")) {
+    if(window.confirm("Delete absence ?")){
 
       await axios.delete(`/absences/${id}`);
 
@@ -55,13 +62,15 @@ function Absences() {
     }
   };
 
-  return (
+  return(
 
     <div className="page-container">
 
       <div className="page-content">
 
-        <h1>Absences Management</h1>
+        <h1 className="page-title">
+          Absences Management
+        </h1>
 
         <form
           className="modern-form"
@@ -70,10 +79,10 @@ function Absences() {
 
           <select
             value={form.studentId}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                studentId: e.target.value
+                studentId:e.target.value
               })
             }
           >
@@ -82,7 +91,7 @@ function Absences() {
               Select Student
             </option>
 
-            {students.map(student => (
+            {students.map(student=>(
 
               <option
                 key={student.id}
@@ -98,10 +107,10 @@ function Absences() {
           <input
             type="date"
             value={form.date}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                date: e.target.value
+                date:e.target.value
               })
             }
           />
@@ -110,10 +119,10 @@ function Absences() {
             type="text"
             placeholder="Subject"
             value={form.matiere}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                matiere: e.target.value
+                matiere:e.target.value
               })
             }
           />
@@ -122,15 +131,18 @@ function Absences() {
             type="text"
             placeholder="Justification"
             value={form.justification}
-            onChange={(e) =>
+            onChange={(e)=>
               setForm({
                 ...form,
-                justification: e.target.value
+                justification:e.target.value
               })
             }
           />
 
-          <button type="submit">
+          <button
+            className="modern-btn"
+            type="submit"
+          >
             Add Absence
           </button>
 
@@ -138,7 +150,7 @@ function Absences() {
 
         <div className="glass-table">
 
-          <table>
+          <table className="modern-table">
 
             <thead>
 
@@ -154,7 +166,7 @@ function Absences() {
 
             <tbody>
 
-              {absences.map(abs => (
+              {absences.map(abs=>(
 
                 <tr key={abs.id}>
 

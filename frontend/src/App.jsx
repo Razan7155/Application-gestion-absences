@@ -6,7 +6,7 @@ import {
 //import App from "./App";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
@@ -97,6 +97,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/profile"
+  element={
+    <ProtectedRoute
+      roles={["STUDENT"]}
+    >
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
 
       </Routes>
 

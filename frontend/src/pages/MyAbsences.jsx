@@ -5,6 +5,8 @@ function MyAbsences(){
 
   const [absences,setAbsences]=useState([]);
 
+  const username = localStorage.getItem("username");
+
   useEffect(()=>{
 
     loadData();
@@ -15,7 +17,11 @@ function MyAbsences(){
 
     const res = await axios.get("/absences");
 
-    setAbsences(res.data);
+    const filtered = res.data.filter(
+      a => a.student?.name === username
+    );
+
+    setAbsences(filtered);
   };
 
   return(
@@ -28,31 +34,41 @@ function MyAbsences(){
           My Absences
         </h1>
 
-        <table className="modern-table">
+        {absences.length === 0 ? (
 
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Subject</th>
-              <th>Justification</th>
-            </tr>
-          </thead>
+          <p className="empty-message">
+            No absences found.
+          </p>
 
-          <tbody>
+        ) : (
 
-            {absences.map(a=>(
+          <table className="modern-table">
 
-              <tr key={a.id}>
-                <td>{a.date}</td>
-                <td>{a.matiere}</td>
-                <td>{a.justification}</td>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Justification</th>
               </tr>
+            </thead>
 
-            ))}
+            <tbody>
 
-          </tbody>
+              {absences.map(a=>(
 
-        </table>
+                <tr key={a.id}>
+                  <td>{a.date}</td>
+                  <td>{a.matiere}</td>
+                  <td>{a.justification}</td>
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        )}
 
       </div>
 

@@ -1,8 +1,22 @@
-function Users(){
+import { useEffect, useState } from "react";
+import axios from "../services/axios";
 
-  const role = localStorage.getItem("role");
+function Users() {
 
-  const username = localStorage.getItem("username");
+  const [users,setUsers] = useState([]);
+
+  useEffect(()=>{
+
+    loadUsers();
+
+  },[]);
+
+  const loadUsers = async()=>{
+
+    const res = await axios.get("/users");
+
+    setUsers(res.data);
+  };
 
   return(
 
@@ -14,25 +28,44 @@ function Users(){
           Users Management
         </h1>
 
-        <table className="modern-table">
+        <div className="glass-table">
 
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Role</th>
-            </tr>
-          </thead>
+          <table className="modern-table">
 
-          <tbody>
+            <thead>
 
-            <tr>
-              <td>{username}</td>
-              <td>{role}</td>
-            </tr>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+              </tr>
 
-          </tbody>
+            </thead>
 
-        </table>
+            <tbody>
+
+              {users.map(user=>(
+
+                <tr key={user.id}>
+
+                  <td>{user.id}</td>
+
+                  <td>{user.username}</td>
+
+                  <td>{user.email}</td>
+
+                  <td>{user.role}</td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </div>
 
