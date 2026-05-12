@@ -456,3 +456,59 @@ a{
   color:#cbd5e1;
   font-size:18px;
 }
+/* SEARCH */
+
+.search-bar{
+  margin-bottom:25px;
+}
+
+.search-bar input,
+.filters-container input{
+  width:100%;
+  max-width:320px;
+  height:52px;
+  border:none;
+  outline:none;
+  border-radius:14px;
+  padding:0 18px;
+  background:rgba(255,255,255,0.06);
+  color:white;
+  font-size:15px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.filters-container{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+/* PROFILE */
+
+.profile-card{
+  display:flex;
+  gap:25px;
+  flex-wrap:wrap;
+}
+
+.profile-item{
+  flex:1;
+  min-width:240px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:22px;
+  padding:30px;
+  backdrop-filter:blur(20px);
+}
+
+.profile-item span{
+  color:#94a3b8;
+  font-size:14px;
+}
+
+.profile-item h3{
+  margin-top:12px;
+  font-size:28px;
+  color:white;
+}

@@ -1,12 +1,12 @@
 import {
   BrowserRouter,
   Routes,
-  Route
+ Route
 } from "react-router-dom";
-//import App from "./App";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Profile from "./pages/Profile";
+
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
@@ -14,6 +14,7 @@ import Absences from "./pages/Absences";
 import Analytics from "./pages/Analytics";
 import Users from "./pages/Users";
 import MyAbsences from "./pages/MyAbsences";
+import MyProfile from "./pages/MyProfile";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -97,16 +98,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
-  path="/profile"
-  element={
-    <ProtectedRoute
-      roles={["STUDENT"]}
-    >
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
+          path="/profile"
+          element={
+            <ProtectedRoute
+              roles={["STUDENT"]}
+            >
+              <MyProfile />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
 

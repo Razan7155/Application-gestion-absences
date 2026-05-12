@@ -5,6 +5,8 @@ function Students() {
 
   const [students, setStudents] = useState([]);
 
+  const [search, setSearch] = useState("");
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -49,6 +51,21 @@ function Students() {
     }
   };
 
+  const filteredStudents = students.filter(student =>
+
+    student.name
+      ?.toLowerCase()
+      .includes(search.toLowerCase()) ||
+
+    student.email
+      ?.toLowerCase()
+      .includes(search.toLowerCase()) ||
+
+    student.filiere
+      ?.toLowerCase()
+      .includes(search.toLowerCase())
+  );
+
   return (
 
     <div className="page-container">
@@ -59,6 +76,23 @@ function Students() {
           Students Management
         </h1>
 
+        {/* SEARCH */}
+
+        <div className="search-bar">
+
+          <input
+            type="text"
+            placeholder="Search by name, email or filiere..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+
+        </div>
+
+        {/* FORM */}
+
         <form
           className="modern-form"
           onSubmit={addStudent}
@@ -68,10 +102,10 @@ function Students() {
             type="text"
             placeholder="Student Name"
             value={form.name}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                name:e.target.value
+                name: e.target.value
               })
             }
           />
@@ -80,10 +114,10 @@ function Students() {
             type="email"
             placeholder="Email"
             value={form.email}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                email:e.target.value
+                email: e.target.value
               })
             }
           />
@@ -92,10 +126,10 @@ function Students() {
             type="text"
             placeholder="Filiere"
             value={form.filiere}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                filiere:e.target.value
+                filiere: e.target.value
               })
             }
           />
@@ -108,6 +142,8 @@ function Students() {
           </button>
 
         </form>
+
+        {/* TABLE */}
 
         <div className="glass-table">
 
@@ -127,7 +163,7 @@ function Students() {
 
             <tbody>
 
-              {students.map(student => (
+              {filteredStudents.map(student => (
 
                 <tr key={student.id}>
 
@@ -153,6 +189,7 @@ function Students() {
                   </td>
 
                 </tr>
+
               ))}
 
             </tbody>

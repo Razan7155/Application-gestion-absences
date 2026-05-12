@@ -7,54 +7,58 @@ function Absences() {
 
   const [students, setStudents] = useState([]);
 
+  const [search, setSearch] = useState("");
+
+  const [dateFilter, setDateFilter] = useState("");
+
   const [form, setForm] = useState({
-    date:"",
-    matiere:"",
-    justification:"",
-    studentId:""
+    date: "",
+    matiere: "",
+    justification: "",
+    studentId: ""
   });
 
-  useEffect(()=>{
+  useEffect(() => {
 
     loadAbsences();
 
     loadStudents();
 
-  },[]);
+  }, []);
 
-  const loadAbsences = async()=>{
+  const loadAbsences = async () => {
 
     const res = await axios.get("/absences");
 
     setAbsences(res.data);
   };
 
-  const loadStudents = async()=>{
+  const loadStudents = async () => {
 
     const res = await axios.get("/students");
 
     setStudents(res.data);
   };
 
-  const addAbsence = async(e)=>{
+  const addAbsence = async (e) => {
 
     e.preventDefault();
 
-    await axios.post("/absences",form);
+    await axios.post("/absences", form);
 
     setForm({
-      date:"",
-      matiere:"",
-      justification:"",
-      studentId:""
+      date: "",
+      matiere: "",
+      justification: "",
+      studentId: ""
     });
 
     loadAbsences();
   };
 
-  const deleteAbsence = async(id)=>{
+  const deleteAbsence = async (id) => {
 
-    if(window.confirm("Delete absence ?")){
+    if (window.confirm("Delete absence ?")) {
 
       await axios.delete(`/absences/${id}`);
 
@@ -62,7 +66,26 @@ function Absences() {
     }
   };
 
-  return(
+  const filteredAbsences = absences.filter(abs => {
+
+    const matchSearch =
+
+      abs.student?.name
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+
+      abs.matiere
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
+
+    const matchDate = dateFilter
+      ? abs.date === dateFilter
+      : true;
+
+    return matchSearch && matchDate;
+  });
+
+  return (
 
     <div className="page-container">
 
@@ -72,6 +95,27 @@ function Absences() {
           Absences Management
         </h1>
 
+        <div className="filters-container">
+
+          <input
+            type="text"
+            placeholder="Search by student or subject"
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+
+          <input
+            type="date"
+            value={dateFilter}
+            onChange={(e) =>
+              setDateFilter(e.target.value)
+            }
+          />
+
+        </div>
+
         <form
           className="modern-form"
           onSubmit={addAbsence}
@@ -79,10 +123,10 @@ function Absences() {
 
           <select
             value={form.studentId}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                studentId:e.target.value
+                studentId: e.target.value
               })
             }
           >
@@ -91,7 +135,7 @@ function Absences() {
               Select Student
             </option>
 
-            {students.map(student=>(
+            {students.map(student => (
 
               <option
                 key={student.id}
@@ -107,10 +151,10 @@ function Absences() {
           <input
             type="date"
             value={form.date}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                date:e.target.value
+                date: e.target.value
               })
             }
           />
@@ -119,10 +163,10 @@ function Absences() {
             type="text"
             placeholder="Subject"
             value={form.matiere}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                matiere:e.target.value
+                matiere: e.target.value
               })
             }
           />
@@ -131,10 +175,10 @@ function Absences() {
             type="text"
             placeholder="Justification"
             value={form.justification}
-            onChange={(e)=>
+            onChange={(e) =>
               setForm({
                 ...form,
-                justification:e.target.value
+                justification: e.target.value
               })
             }
           />
@@ -166,7 +210,7 @@ function Absences() {
 
             <tbody>
 
-              {absences.map(abs=>(
+              {filteredAbsences.map(abs => (
 
                 <tr key={abs.id}>
 

@@ -56,16 +56,16 @@ function Navbar() {
         )}
 
         {role === "STUDENT" && (
-          <>
-            <Link to="/my-absences">
-              My Absences
-            </Link>
+  <>
+    <Link to="/my-absences">
+      My Absences
+    </Link>
 
-            <Link to="/profile">
-              Profile
-            </Link>
-          </>
-        )}
+    <Link to="/profile">
+      Profile
+    </Link>
+  </>
+)}
 
         {token && (
           <div className="user-info">
